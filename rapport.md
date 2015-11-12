@@ -24,7 +24,7 @@ C'est la méthode `Utils.computeAccuracy` en Java
 
 [Voir ici](https://estimote.github.io/Android-SDK/JavaDocs/com/estimote/sdk/Utils.html#computeAccuracy)
 
-**12/11/2015**
+**11/11/2015 - 12/11/2015**
 
 Il  y aurait une perte de précision sur android, dû à une moins bonne réduction de bruit par l'OS. Cependant j'essaierai tout de même de trouver une solution afin d'améliorer cela.
 
@@ -33,6 +33,15 @@ Je me concentre maintenant sur l'integration à Ionic, je vais probablement cré
 J'ai initialisé une application *tabs* avec `ionic start inca tabs`
 
 J'ai initialisé un repo git sur [GitHub](https://github.com/charleshaa/projetSemestre)
+
+Après avoir installé [le plugin cordova][5bc7f405], j'ai réussi avec succès à créer un service angular `Estimote` qui va gérer les events et contenir des fonctions
+helper.
+
+Mes premiers test sont passés, consistant à détecter les beacons et afficher leur distance en temps réél.
+
+*Il faudrait peut-être que je créée dans le service une méthode pour leurrer des beacons afin de pouvoir continuer à coder sur chrome au lieu de build à chaque fois.*
+
+Je vais tester tout ça sur android.
 
 
 

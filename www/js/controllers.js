@@ -1,6 +1,20 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope) {})
+.controller('DashCtrl', function($scope, Estimote) {
+
+    $scope.enabled = Estimote.enabled ? "Estimote service is enabled" : "Estimote service is disabled";
+
+    $scope.beacons = [];
+
+    $scope.$on('rangedBeacons', function (event, data) {
+        console.log("NEW BEACONS INFO");
+        $scope.beacons = data.beacons;
+        $scope.$apply();
+    });
+
+    $scope.formatDistance = Estimote.formatDistance;
+
+})
 
 .controller('ChatsCtrl', function($scope, Chats) {
   // With the new view caching in Ionic, Controllers are only called
