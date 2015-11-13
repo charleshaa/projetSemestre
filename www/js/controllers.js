@@ -1,17 +1,17 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope, Estimote) {
+.controller('DashCtrl', function($scope, Estimote, MYBEACONS) {
 
     $scope.enabled = Estimote.enabled ? "Estimote service is enabled" : "Estimote service is disabled";
-
+    $scope.networkType = Estimote.type;
     $scope.beacons = [];
-
+    $scope.beaconDb = MYBEACONS;
     $scope.$on('rangedBeacons', function (event, data) {
-        console.log("NEW BEACONS INFO");
         $scope.beacons = data.beacons;
+        console.log("GOT NEW SIGNALS", data.beacons);
         $scope.$apply();
     });
-
+    $scope.getBeacons = Estimote.getBeacons;
     $scope.formatDistance = Estimote.formatDistance;
 
 })
@@ -35,8 +35,6 @@ angular.module('starter.controllers', [])
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
+.controller('beaconsCtrl', function($scope, Estimote) {
+    $scope.beacons = Estimote.getBeacons();
 });

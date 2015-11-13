@@ -43,7 +43,16 @@ Mes premiers test sont passés, consistant à détecter les beacons et afficher 
 
 Je vais tester tout ça sur android.
 
+Pas de problèmes sur android.
 
+**RSSI**
+
+>RSSI stands for Received Signal Strength Indicator. It is the strength of the beacon's signal as seen on the receiving device, e.g. a smartphone. The signal strength depends on distance and Broadcasting Power value. At maximum Broadcasting Power (+4 dBm) the RSSI ranges from -26 (few inches) to -100 (40-50 m distance).
+>
+RSSI is used to approximate distance between the device and the beacon using another value defined by the iBeacon standard: Measured Power (see below).
+Due to external factors influencing radio waves—such as absorption, interference or diffraction—RSSI tends to fluctuate. The further away the device is from the beacon, the more unstable the RSSI becomes.
+
+Afin d'être plus précis, je vais essayer de faire une moyenne des signaux sur 3 emissions.
 
 
 

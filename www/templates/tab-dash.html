@@ -2,12 +2,13 @@
   <ion-content class="padding">
     <p>Welcome to the INCA test App</p>
     <p><b>{{enabled}}</b></p>
+    <p>The signal is {{networkType}}</p>
     <div class="card" ng-repeat="b in beacons">
       <div class="item item-text-wrap">
         <p>
-            <b>Major: </b> {{b.major}} <br>
-            <b>Minor: </b> {{b.minor}} <br>
-            <b>Distance: </b> {{formatDistance(b.distance)}} <br>
+            <b>Name: </b> {{b.name}} <br>
+            <b>Room: </b> {{b.room}} <br>
+            <b>Distance: </b> {{b.distanceFormatted || b.rssi}} <br>
         </p>
       </div>
     </div>

@@ -1,0 +1,10 @@
+<ion-view view-title="Beacons">
+  <ion-content>
+    <ion-list>
+        <ion-item ng-repeat="b in beacons">
+            <h2>{{b.name}} <span style="color: #ccc; font-size: 11px;">&nbsp; &nbsp; {{b.deviceType}}</span></h2>
+            <p>Last seen: {{b.lastSeen}}</p>
+        </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
