@@ -6,12 +6,12 @@
 app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, MYBEACONS) {
 
     var FAKE_INTERVAL = 1000;
-    var REFRESH_RATE = 2000;
+    var REFRESH_RATE = 3000;
     var SAMPLE_SIZE = 3;
 
     this.beacons = {};
     this.stickers = {};
-
+    this.db = {};
     var refreshInterval;
 
 
@@ -20,6 +20,22 @@ app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, 
         var num = Math.random()*(max-min+1)+min;
         return fix ? Math.floor(num) : num;
     }
+
+    // http://stackoverflow.com/questions/21338031/radius-networks-ibeacon-ranging-fluctuation
+    var computeDistance = function(power, rssi) {
+      if (rssi == 0 || !rssi) {
+        return -1; // if we cannot determine accuracy, return -1.
+      }
+
+      var ratio = rssi/power;
+      if (ratio < 1.0) {
+        return Math.pow(ratio, 10);
+      }
+      else {
+        var accuracy =  (0.89976) * Math.pow(ratio, 7.7095) + 0.111;
+        return accuracy/10000000;
+      }
+    };
 
     this.formatDistance = function(meters) {
         if (!meters) {
@@ -65,12 +81,13 @@ app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, 
             }
         } else if(type == 'stickers'){
             var id = data.identifier;
+            var distance = computeDistance(data.power, data.rssi);
             var obj = {
                 uniqueName: id,
                 name: (MYBEACONS[id]) ? MYBEACONS[id].name : data.nameForType,
                 room: (MYBEACONS[id]) ? MYBEACONS[id].room : 'N/A',
-                distance: undefined,
-                distanceFormatted: undefined,
+                distance: distance,
+                distanceFormatted: this.formatDistance(distance),
                 lastSeen: d.toISOString(),
                 rssi: data.rssi,
                 color: data.color,
@@ -99,6 +116,7 @@ app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, 
       bcs[key] = obj;
       if(type == 'beacons') this.beacons[obj.uniqueName] = obj;
       if(type == 'stickers') this.stickers[obj.uniqueName] = obj;
+      this.db[obj.uniqueName] = obj;
     }.bind(this));
 
     return bcs;
@@ -111,6 +129,10 @@ app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, 
   this.getBeacons = function() {
     return angular.extend({}, this.beacons, this.stickers);
    }.bind(this);
+
+   this.getDb = function() {
+     return this.db;
+    }.bind(this);
 
   this.getClosestBeacon = function() {
 
@@ -143,6 +165,8 @@ app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, 
 
     var pushData = function () {
         $rootScope.$broadcast('rangedBeacons', {beacons: this.getBeacons()});
+        this.beacons = {};
+        this.stickers = {};
     }.bind(this);
 
   if (!window.cordova) {
@@ -167,11 +191,10 @@ app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, 
         estimote.beacons.startRangingBeaconsInRegion({}, // Empty region matches all beacons.
         function (data) {
             onRange(data, 'beacons');
-            refreshInterval = setInterval(pushData, REFRESH_RATE);
         },
         onError);
 
-
+        refreshInterval = setInterval(pushData, REFRESH_RATE);
 
         var interval = setInterval(function () {
             estimote.bluetoothState( function(result){
