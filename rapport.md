@@ -55,7 +55,34 @@ Due to external factors influencing radio waves—such as absorption, interferen
 Afin d'être plus précis, je vais essayer de faire une moyenne des signaux sur 3 emissions.
 
 
+**REGIONS**
+
+>What is a beacon region?
+Apple’s iBeacon protocol introduced the concept of a beacon region. It’s important to remember that beacon-enabled apps can detect beacon regions as well as individual beacons.
+As opposed to common understanding of regions, a beacon region is not defined by any geographic properties, like GPS data or latitude and longitude. Instead, it’s characterized by the same three values as beacons: UUID, Major and Minor (read more about them here). Therefore, the physical representation of a region is the range of all beacons in this region.
+
+Je pense qu'on pourrait avoir des chambres définies sur des régions, afin de pouvoir faire tourner ça en background.
 
 
 
   [5bc7f405]: https://github.com/evothings/phonegap-estimotebeacons
+
+
+## Distance
+
+Les iBeacons sont calibrés à une distance de 1 mètre
+
+```js
+function getRange(txCalibratedPower, rssi) {
+    var ratio_db = txCalibratedPower - rssi;
+    var ratio_linear = Math.pow(10, ratio_db / 10);
+
+    var r = Math.sqrt(ratio_linear);
+    return r;
+}
+```
+
+**iBeacons**
+
+florent.gluck@hesge.ch
+pwd: pipomolo007

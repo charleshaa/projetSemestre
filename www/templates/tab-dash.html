@@ -5,11 +5,12 @@
     <p>The signal is {{networkType}}</p>
     <pre>count: {{count}}</pre>
     <div class="card" ng-repeat="b in beacons">
-      <div class="item item-text-wrap">
+      <div ui-sref="^.calibrate({beaconId: b.uniqueName})" class="item item-text-wrap">
         <p>
             <b>Name: </b> {{b.name}} <br>
             <b>Room: </b> {{b.room}} <br>
             <b>Distance: </b> {{b.distanceFormatted || b.rssi}} <br>
+            <b>Calibration: {{b.calibration || 'N/A'}}</b>
         </p>
       </div>
     </div>

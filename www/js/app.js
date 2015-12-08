@@ -45,6 +45,16 @@ var app = angular.module('starter', ['ionic', 'starter.controllers', 'starter.se
     }
   })
 
+  .state('tab.calibrate', {
+    url: '/dash/calibrate/:beaconId',
+    views: {
+      'tab-dash': {
+        templateUrl: 'templates/calibrate.html',
+        controller: 'calibrateCtrl'
+      }
+    }
+  })
+
   .state('tab.chats', {
       url: '/chats',
       views: {
