@@ -1,6 +1,6 @@
 // Ionic INCA app
 
-var app = angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngStorage'])
+var app = angular.module('starter', ['ionic', 'ngStorage'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
