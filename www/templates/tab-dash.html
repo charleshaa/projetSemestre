@@ -10,7 +10,9 @@
             <b>Name: </b> {{b.name}} <br>
             <b>Room: </b> {{b.room}} <br>
             <b>Distance: </b> {{b.distanceFormatted || b.rssi}} <br>
-            <b>Calibration: {{b.calibration || 'N/A'}}</b>
+            <b>Calibration: {{b.calibration || 'N/A'}}</b><br>
+            <b>My distance: </b> {{myDistance(b.rssi, b.calibration)}}
+
         </p>
       </div>
     </div>

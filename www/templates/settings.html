@@ -1,0 +1,43 @@
+<ion-view view-title="Settings">
+    <ion-nav-buttons side="secondary">
+      <button class="button button-clear button-positive" ng-click="saveSettings()">
+          Save
+      </button>
+    </ion-nav-buttons>
+    <ion-content>
+        <ion-list>
+            <ion-item class="item-divider">Polling interval: {{settings.REFRESH_RATE}}s</ion-item>
+            <ion-item class="range range-positive">
+                <input ng-model="settings.REFRESH_RATE" type="range" name="REFRESH_RATE" min="1" max="10">
+            </ion-item>
+            <ion-item class="item-divider">Sample size: {{settings.SAMPLE_SIZE}}</ion-item>
+            <ion-item class="range range-positive">
+                <input ng-model="settings.SAMPLE_SIZE" type="range" name="SAMPLE_SIZE" min="1" max="10">
+            </ion-item>
+            <ion-item class="item-divider">Stats sample size: {{settings.STATS_SIZE}}</ion-item>
+            <ion-item class="range range-positive">
+                <input ng-model="settings.STATS_SIZE" type="range" name="STATS_SIZE" min="3" max="100">
+            </ion-item>
+            <ion-item class="item-divider">Normalization technique</ion-item>
+            <label class="item item-radio">
+                <input value="avg" ng-model="settings.NORM_METHOD" type="radio" name="NORM_METHOD">
+                <div class="radio-content">
+                  <div class="item-content">
+                    Average
+                  </div>
+                  <i class="radio-icon ion-checkmark"></i>
+                </div>
+              </label>
+              <label class="item item-radio">
+                  <input value="median" ng-model="settings.NORM_METHOD" type="radio" name="NORM_METHOD">
+                  <div class="radio-content">
+                    <div class="item-content">
+                      Median
+                    </div>
+                    <i class="radio-icon ion-checkmark"></i>
+                  </div>
+                </label>
+        </ion-list>
+        <pre>{{settings | json}}</pre>
+    </ion-content>
+</ion-view>

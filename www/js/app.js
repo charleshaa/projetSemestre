@@ -1,6 +1,6 @@
 // Ionic INCA app
 
-var app = angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+var app = angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngStorage'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -54,7 +54,24 @@ var app = angular.module('starter', ['ionic', 'starter.controllers', 'starter.se
       }
     }
   })
-
+  .state('tab.settings', {
+    url: '/settings',
+    views: {
+      'tab-settings': {
+        templateUrl: 'templates/settings.html',
+        controller: 'settingsCtrl'
+      }
+    }
+  })
+  .state('tab.stats', {
+    url: '/stats',
+    views: {
+      'tab-stats': {
+        templateUrl: 'templates/stats.html',
+        controller: 'statsCtrl'
+      }
+    }
+  })
   .state('tab.chats', {
       url: '/chats',
       views: {

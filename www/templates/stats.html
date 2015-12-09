@@ -1,0 +1,26 @@
+<ion-view view-title="Stats">
+    <ion-nav-buttons>
+        <button class="button button-clear button-positive" ng-click="reset()">
+            Reset
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content>
+        <div class="row">
+            <div class="col"><b>Material</b></div>
+            <div class="col"><b>My distance</b></div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <i>AVG: {{format(avg(materialDistances))}}</i>
+            </div>
+            <div class="col">
+                <i>AVG: {{format(avg(myDistances))}}</i>
+            </div>
+        </div>
+        <div ng-repeat="i in iterations" class="row">
+            <div class="col">{{format(i.distance)}}</div>
+            <div class="col">{{format(myDistance(i.rssi, i.calibration))}}</div>
+        </div>
+    </ion-content>
+</ion-view>

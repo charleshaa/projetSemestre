@@ -3,22 +3,20 @@
 * Estimote service for managing beacons throughout the app. Events, helper functions, etc.
 */
 
-app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, MYBEACONS) {
+app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, MYBEACONS, $localStorage, Settings) {
 
-    var FAKE_INTERVAL = 1000;
-    var REFRESH_RATE = 3000;
-    var SAMPLE_SIZE = 3;
-    var NORM_METHOD = 'avg';
+    var settings = Settings.settings;
+
 
     this.beacons = {};
     this.stickers = {};
     this.distances = {};
-    this.db = {};
+    this.db = $localStorage.beaconDb || {};
     var refreshInterval;
 
     var normalizeDistances = function(distances) {
         if (!distances || distances.length < 0) return -1;
-        switch (NORM_METHOD) {
+        switch (settings.NORM_METHOD) {
             case "med": // Median
                 distances.sort( function(a,b) {return a - b;} );
 
@@ -31,7 +29,6 @@ app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, 
                 break;
             case "avg": // Average
             default:
-                console.log("LISSAGE DES DISTANCES", distances);
                 var sum = 0;
                 for (i = 0; i < distances.length; i++) {
                     sum += distances[i];
@@ -43,7 +40,7 @@ app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, 
         }
     };
 
-    function randomNum(min, max, fix) {
+    var randomNum = function(min, max, fix) {
         var num = Math.random() * (max - min + 1) + min;
         return fix ? Math.floor(num) : num;
     }
@@ -62,6 +59,20 @@ app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, 
             return accuracy / 10000000;
         }
     };
+
+
+    this.save = function () {
+        $localStorage.beaconDb = this.db;
+    }.bind(this);
+
+    this.distanceFromCalibration = function (txCalibratedPower, rssi) {
+        if(!rssi || !txCalibratedPower) return -1;
+        var ratio_db = rssi - txCalibratedPower;
+        var ratio_linear = Math.pow(10, ratio_db / 10);
+
+        var r = Math.sqrt(ratio_linear);
+        return r;
+    }.bind(this);
 
     this.formatDistance = function(meters) {
         if (!meters) {
@@ -176,6 +187,7 @@ app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, 
                 else this.distances[obj.uniqueName] = [obj.distance];
             }
             this.db[obj.uniqueName] = obj;
+            this.save();
         }.bind(this));
 
         return bcs;
@@ -193,9 +205,14 @@ app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, 
         return this.db;
     }.bind(this);
 
-    this.getClosestBeacon = function() {
-
-    };
+    this.destroy = function () {
+        delete $localStorage.beaconDb;
+        this.db = {};
+        this.beacons = {};
+        this.stickers = {};
+        this.distances = {};
+        $rootScope.$broadcast('dbReset');
+    }.bind(this);
 
     var generateBeaconSignal = function() {
         var signal = {
@@ -224,10 +241,9 @@ app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, 
 
     var pushData = function() {
         var payload = angular.copy(this.getBeacons());
-        console.log("DISTANCES", JSON.stringify(this.distances));
         angular.forEach(payload, function(val, key) {
             if (this.distances[key]) payload[key].distance = normalizeDistances(this.distances[key]);
-        });
+        }.bind(this));
         $rootScope.$broadcast('rangedBeacons', {
             beacons: payload
         });
@@ -244,7 +260,7 @@ app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, 
             $rootScope.$broadcast('rangedBeacons', {
                 beacons: sig
             });
-        }, FAKE_INTERVAL);
+        }, settings.FAKE_INTERVAL * 1000);
 
     } else {
         this.enabled = true;
@@ -262,7 +278,7 @@ app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, 
                 },
                 onError);
 
-                refreshInterval = setInterval(pushData, REFRESH_RATE);
+                refreshInterval = setInterval(pushData, settings.REFRESH_RATE * 1000);
 
                 var interval = setInterval(function() {
                     estimote.bluetoothState(function(result) {
