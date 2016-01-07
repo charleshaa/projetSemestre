@@ -3,12 +3,17 @@
         <button class="button button-clear button-positive" ng-click="reset()">
             Reset
         </button>
+        <button class="button button-clear button-positive" ng-disabled="!done" ng-click="send()">
+            Send
+        </button>
     </ion-nav-buttons>
 
     <ion-content>
         <div class="row">
             <div class="col"><b>Material</b></div>
             <div class="col"><b>My distance</b></div>
+            <div class="col"><b>More precise ?</b></div>
+            <div class="col"><b>%</b></div>
         </div>
         <div class="row">
             <div class="col">
@@ -17,10 +22,21 @@
             <div class="col">
                 <i>AVG: {{format(avg(myDistances))}}</i>
             </div>
+            <div class="col">
+                <i>AVG: N/A</i>
+            </div>
+            <div class="col">
+                <i>AVG: N/A</i>
+            </div>
         </div>
-        <div ng-repeat="i in iterations" class="row">
-            <div class="col">{{format(i.distance)}}</div>
-            <div class="col">{{format(myDistance(i.rssi, i.calibration))}}</div>
+        <div class="striped">
+            <div ng-repeat="i in iterations" class="row">
+                <div class="col">{{format(i.distance)}}</div>
+                <div class="col">{{format(myDistance(i.rssi, i.calibration))}}</div>
+                <div class="col"><span ng-class="{'balanced': diffBool(i.distance, myDistance(i.rssi, i.calibration), 1), 'assertive': !diffBool(i.distance, myDistance(i.rssi, i.calibration), 1)}">{{diffBool(i.distance, myDistance(i.rssi, i.calibration), 1)}}</span></div>
+                <div class="col">{{diffPerc(i.distance, myDistance(i.rssi, i.calibration), 1)}}%</div>
+            </div>
         </div>
+
     </ion-content>
 </ion-view>

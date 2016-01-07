@@ -4,7 +4,8 @@ app.service('Settings', function ($rootScope, $localStorage) {
         REFRESH_RATE: 3,
         SAMPLE_SIZE: 3,
         NORM_METHOD: 'avg',
-        STATS_SIZE: 10
+        STATS_SIZE: 10,
+        REMOTE_IP: '10.246.2.239'
     };
 
     this.settings = $localStorage.settings || this.defaults;

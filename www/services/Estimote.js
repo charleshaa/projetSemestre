@@ -3,10 +3,9 @@
 * Estimote service for managing beacons throughout the app. Events, helper functions, etc.
 */
 
-app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, MYBEACONS, $localStorage, Settings) {
+app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, MYBEACONS, $localStorage, Settings, Helpers) {
 
     var settings = Settings.settings;
-
 
     this.beacons = {};
     this.stickers = {};
@@ -18,32 +17,17 @@ app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, 
         if (!distances || distances.length < 0) return -1;
         switch (settings.NORM_METHOD) {
             case "med": // Median
-                distances.sort( function(a,b) {return a - b;} );
-
-                var half = Math.floor(values.length/2);
-
-                if(values.length % 2)
-                    return values[half];
-                else
-                    return (values[half-1] + values[half]) / 2.0;
+                return Helpers.median(distances);
                 break;
             case "avg": // Average
             default:
-                var sum = 0;
-                for (i = 0; i < distances.length; i++) {
-                    sum += distances[i];
-                }
-                var avg = sum / distances.length;
-                return avg;
+                return Helpers.avg(distances);
                 break;
 
         }
     };
 
-    var randomNum = function(min, max, fix) {
-        var num = Math.random() * (max - min + 1) + min;
-        return fix ? Math.floor(num) : num;
-    }
+
 
     // http://stackoverflow.com/questions/21338031/radius-networks-ibeacon-ranging-fluctuation
     var computeDistance = function(power, rssi) {
@@ -80,9 +64,9 @@ app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, 
         }
 
         if (meters > 1) {
-            return meters.toFixed(3) + ' m';
+            return meters.toFixed(2) + ' m';
         } else {
-            return (meters * 100).toFixed(3) + ' cm';
+            return (meters * 100).toFixed(2) + ' cm';
         }
     };
 
@@ -224,16 +208,16 @@ app.service('Estimote', function($rootScope, $filter, $timeout, $ionicPlatform, 
                 "major": 401,
                 "proximityUUID": "B9407F30-F5F8-466E-AFF9-25556B57FE6D",
                 "minor": 1,
-                "rssi": randomNum(-55, -40, true),
-                "distance": randomNum(0, 100, false),
-                "proximity": randomNum(0, 3, true)
+                "rssi": Helpers.randomNum(-55, -40, true),
+                "distance": Helpers.randomNum(0, 100, false),
+                "proximity": Helpers.randomNum(0, 3, true)
             }, {
                 "major": 17222,
                 "proximityUUID": "B9407F30-F5F8-466E-AFF9-25556B57FE6D",
                 "minor": 48261,
-                "rssi": randomNum(-55, -40, true),
-                "distance": randomNum(0, 100, false),
-                "proximity": randomNum(0, 3, true)
+                "rssi": Helpers.randomNum(-55, -40, true),
+                "distance": Helpers.randomNum(0, 100, false),
+                "proximity": Helpers.randomNum(0, 3, true)
             }]
         };
         return signal;

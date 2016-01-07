@@ -2,10 +2,12 @@
     <ion-content padding="20">
         <div class="card">
             <div class="item item-text-wrap">
-                <p>Please place your phone at exactly 1 meter (3 feet) from the beacon you are trying to calibrate. When the RSSI below is stable,
-                tap the button <i>Calibrate !</i></p>
+                <p>Please place your phone at exactly 1 meter (3 feet) from the beacon you are trying to calibrate. The more values you get for RSSI, the better calibration. Once happy with results, click the button <i>Calibrate !</i></p>
                 <p><b>RSSI: {{measuredRSSI}}</b></p>
-                <button ng-click="calibrateBeacon()" class="button button-block button-positive">Calibrate !</button>
+                <p><b>Variance: {{variance}}</b></p>
+                <p><b>Number of values for RSSI: {{values.length}}</b></p>
+                <button ng-class="{'button-balanced': variance < 2, 'button-energized': variance >= 2 && variance < 4, 'button-disabled button-assertive': variance >= 4}" ng-click="calibrateBeacon()" class="button button-block">Calibrate !</button>
+                <pre>{{values | json}}</pre>
             </div>
         </div>
 

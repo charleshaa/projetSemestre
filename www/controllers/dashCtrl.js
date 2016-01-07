@@ -1,4 +1,4 @@
-app.controller('DashCtrl', function($scope, Estimote, MYBEACONS) {
+app.controller('dashCtrl', function($scope, Estimote, MYBEACONS) {
     $scope.count = 0;
     $scope.enabled = Estimote.enabled ? "Estimote service is enabled" : "Estimote service is disabled";
     $scope.networkType = Estimote.type;

@@ -30,7 +30,7 @@
     - Software
 
 
-- Trustproofing and testing
+- Validation and testing
     - Confidence calculation
     - Testing
         - Techniques
